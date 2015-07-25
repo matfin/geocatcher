@@ -1,6 +1,6 @@
 {
   "name": "geocatcher",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A simple node module to filter items within a certain distance radius given their geo coordinates",
   "main": "index.js",
   "scripts": {

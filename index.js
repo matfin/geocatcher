@@ -92,13 +92,3 @@ module.exports = {
 	sortAndMap: sortAndMap
 };
 
-// runWith: function(cb) {
-// 	var url = 'https://gist.githubusercontent.com/antidis/c4d7dd067ab47cce5856/raw/7b31c00ee9d52bf817de0708dabad3e5eb62f8ad/locations.json';
-
-// 	module.exports.fetch(url, function(res) {
-// 		var filtered = module.exports.filterWithinDistance(res, {lat: 53.3381985, lng: -6.2592576}, 30);
-
-// 		console.log(module.exports.sortAndMap(filtered));		
-// 	});
-// }
-

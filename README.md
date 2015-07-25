@@ -12,7 +12,7 @@ It includes unit tests for the functions in index.js and has a .travis.yml confi
 Installation is simple - just run the following on the command line:
 
 ```
-$ git clone https://github.com/matfin/geocatcher/issues
+$ git clone https://github.com/matfin/geocatcher.git
 $ cd geocatcher/
 $ npm install
 ```

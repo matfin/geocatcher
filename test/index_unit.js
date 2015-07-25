@@ -5,9 +5,40 @@ var chai = require('chai'),
 		assert = chai.assert,
 		expect = chai.expect,
 		geocatcher = require('../index'),
+		validatedCoordinates = geocatcher.validatedCoordinates,
 		haversineDistance = geocatcher.haversineDistance,
 		filterWithinDistance = geocatcher.filterWithinDistance,
 		sortAndMap = geocatcher.sortAndMap;
+
+describe('#validatedCoordinates', function() {
+
+	var raw_test_coordinates = [
+		{latitude: "54.133333", user_id: 24, name: "Rose Enright", longitude: "-6.433333"},
+		{latitude: "55.033", user_id: 19, name: "Enid Cahill", longitude: "-8.112"},
+		{latitude: "53.74452", user_id: 29, name: "Oliver Ahearn", longitude: "-7.11167"},
+		{latitude: "abcde", user_id: 30, name: "Nick Enright", longitude: "-7.2875"},
+		{latitude: "54.080556", user_id: 23, name: "Eoin Gallagher", longitude: "fghij"}
+	],
+	validated_coordinates = geocatcher.validatedCoordinates(raw_test_coordinates);
+
+	it('should remove two invalid coordinates given a total of five with two invalid', function() {
+		expect(validated_coordinates.length).to.equal(3);
+	});
+
+	it('should correctly remap the raw coordinates on validation', function() {
+
+		validated_coordinates.forEach(function(item) {
+			expect(item.lat).to.be.a('number');
+			expect(item.lng).to.be.a('number');
+			expect(item.user_id).to.be.a('number');
+			expect(item.name).to.be.a('string');
+			assert.isUndefined(item.latitude);
+			assert.isUndefined(item.longitude);
+		});
+
+	});
+
+});
 
 describe('#haversineDistance', function() {
 
@@ -40,14 +71,14 @@ describe('#filterWithinDistance', function() {
 
 		var source_coordinate = {lat: 53.339370, lng: -6.257496}, //Intercom Office
 				test_items = [
-			{latitude: 52.986375, user_id: 12, name: "Christina McArdle", longitude: -6.043701}, 	//41km
-		  {latitude: 51.92893, user_id: 1, 	name: "Alice Cahill", longitude: -10.27699}, 				//313km
-		  {latitude: 51.8856167, user_id: 2, name: "Ian McArdle", longitude: -10.4240951}, 			//326km
-		  {latitude: 52.3191841, user_id: 3, name: "Jack Enright", longitude: -8.5072391}, 			//191km
-		  {latitude: 53.807778, user_id: 28, name: "Charlie Halligan", longitude: -7.714444}, 	//109km
-		  {latitude: 53.4692815, user_id: 7, name: "Frank Kehoe", longitude: -9.436036}, 				//211km
-		  {latitude: 54.0894797, user_id: 8, name: "Eoin Ahearn", longitude: -6.18671}, 				//83km
-		  {latitude: 53.038056, user_id: 26, name: "Stephen McArdle", longitude: -7.653889} 		//99km 
+			{lat: 52.986375, user_id: 12, name: "Christina McArdle", lng: -6.043701}, 	//41km
+		  {lat: 51.92893, user_id: 1, 	name: "Alice Cahill", lng: -10.27699}, 				//313km
+		  {lat: 51.8856167, user_id: 2, name: "Ian McArdle", lng: -10.4240951}, 			//326km
+		  {lat: 52.3191841, user_id: 3, name: "Jack Enright", lng: -8.5072391}, 			//191km
+		  {lat: 53.807778, user_id: 28, name: "Charlie Halligan", lng: -7.714444}, 	//109km
+		  {lat: 53.4692815, user_id: 7, name: "Frank Kehoe", lng: -9.436036}, 				//211km
+		  {lat: 54.0894797, user_id: 8, name: "Eoin Ahearn", lng: -6.18671}, 				//83km
+		  {lat: 53.038056, user_id: 26, name: "Stephen McArdle", lng: -7.653889} 		//99km 
 		];
 
 		expect(filterWithinDistance(test_items, source_coordinate, 50).length).to.equal(1);
@@ -62,11 +93,11 @@ describe('#filterWithinDistance', function() {
 describe('#sortAndMap', function() {
 
 	var test_items = [
-		{latitude: 52.986375, user_id: 12, name: "Christina McArdle", longitude: -6.043701},
-	  {latitude: 51.92893, user_id: 1, 	name: "Alice Cahill", longitude: -10.27699},
-	  {latitude: 51.8856167, user_id: 2, name: "Ian McArdle", longitude: -10.4240951},
-	  {latitude: 52.3191841, user_id: 3, name: "Jack Enright", longitude: -8.5072391},
-	  {latitude: 53.807778, user_id: 28, name: "Charlie Halligan", longitude: -7.714444} 	
+		{lat: 52.986375, user_id: 12, name: "Christina McArdle", lng: -6.043701},
+	  {lat: 51.92893, user_id: 1, 	name: "Alice Cahill", lng: -10.27699},
+	  {lat: 51.8856167, user_id: 2, name: "Ian McArdle", lng: -10.4240951},
+	  {lat: 52.3191841, user_id: 3, name: "Jack Enright", lng: -8.5072391},
+	  {lat: 53.807778, user_id: 28, name: "Charlie Halligan", lng: -7.714444} 	
 	];
 
 	it('should return a collection sorted by user_id in ascending order', function() {
@@ -87,8 +118,8 @@ describe('#sortAndMap', function() {
 		sorted_test_items.forEach(function(item) {
 			expect(item.user_id).to.be.a('number');
 			expect(item.name).to.be.a('string');
-			assert.isUndefined(item.latitude);
-			assert.isUndefined(item.longitude);
+			assert.isUndefined(item.lat);
+			assert.isUndefined(item.lng);
 		});
 
 	});

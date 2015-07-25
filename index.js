@@ -110,6 +110,7 @@ var sortAndMap = function(source) {
 
 module.exports = {
 	fetch: fetch,
+	validatedCoordinates: validatedCoordinates,
 	haversineDistance: haversineDistance,
 	filterWithinDistance: filterWithinDistance,
 	sortAndMap: sortAndMap

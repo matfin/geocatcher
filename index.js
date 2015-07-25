@@ -17,10 +17,33 @@ var fetch = function(uri, cb) {
 		});
 		res.on('end', function() {
 			if(typeof cb === 'function') {
-				cb(JSON.parse(body));
+				var data = JSON.parse(body),
+						filtered = validatedCoordinates(data);
+
+				cb(filtered);
 			}
 		});
 	});	
+};
+
+/**
+ *	Filter coordinates to ensure they are valid - drop any that cannot have 
+ *	their lat/lng converted into floats.
+ *	
+ *	@param {Array} unfiltered - the unfiltered coordinates coming from an endpoint
+ *	@return {Array} - filtered and mapped coordinates
+ */
+var validatedCoordinates = function(unfiltered) {
+	return unfiltered.map(function(item) {
+		return {
+			lat: parseFloat(item.latitude),
+			lng: parseFloat(item.longitude),
+			name: item.name,
+			user_id: item.user_id
+		};
+	}).filter(function(item) {
+		return !isNaN(item.lat) && !isNaN(item.lng);
+	});
 };
 
 /**
@@ -62,10 +85,10 @@ var haversineDistance = function(source_coord, dest_coord) {
  */
 var filterWithinDistance = function(items, source_location, within_distance) {
 	return items.filter(function(item) {
-		if(typeof item.latitude === 'undefined' || typeof item.longitude === 'undefined') {
+		if(typeof item.lat === 'undefined' || typeof item.lng === 'undefined') {
 			return;
 		}
-		return haversineDistance(source_location, {lat: item.latitude, lng: item.longitude}) <= within_distance;
+		return haversineDistance(source_location, {lat: item.lat, lng: item.lng}) <= within_distance;
 	});
 };
 

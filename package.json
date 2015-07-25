@@ -1,0 +1,23 @@
+{
+  "name": "geocatcher",
+  "version": "0.0.1",
+  "description": "A simple node module to filter items within a certain distance radius given their geo coordinates",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matfin/geocatcher.git"
+  },
+  "author": "Matt Finucane <matfin@gmail.com> (http://mattfinucane.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matfin/geocatcher/issues"
+  },
+  "homepage": "https://github.com/matfin/geocatcher#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  }
+}

@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 module.exports = {
 	/**
 	 *	Fetch the data from an endpoint given the URI
@@ -27,30 +25,32 @@ module.exports = {
 	},
 
 	/**
-	 *	Calculate distance given a coordinate relative to another
+	 *	Calculate distance using Haversine formula with two coordinates
 	 *
 	 *	@param {Object} source_coord - the source coordinate which should take the form {lat: 44.55555, lng: -5.33322}
 	 *	@param {Object} dest_coord - given coordinate to calculate against
-	 *	@return {Number} - the calculated distance
+	 *	@return {Number} - the calculated distance in km
 	 */
-	calculateDistance: function(source_coord, dest_coord) {
-		var earth_radius_km = 6371,
-				sin_source_lat = Math.sin(source_coord.lat),
-				sin_dest_lat = Math.sin(dest_coord.lat),
-				cos_source_lat = Math.cos(source_coord.lat),
-				cos_dest_lat = Math.cos(dest_coord.lat),
-				cos_diff_lng = Math.cos(Math.abs(source_coord.lng - dest_coord.lng)),
-				sin_diff_lng = Math.sin(Math.abs(source_coord.lng - dest_coord.lng)),
+	haversineDistance: function(source_coord, dest_coord) {
 
-		 		f1 = Math.pow(cos_dest_lat * sin_diff_lng, 2),
-				f2 = Math.pow((cos_source_lat * sin_dest_lat) - (sin_source_lat * cos_dest_lat * cos_diff_lng), 2),
-				f3 = (sin_source_lat * sin_dest_lat),
-				f4 = (cos_source_lat * cos_dest_lat * cos_diff_lng),
-				degrees = Math.atan2(Math.sqrt(f1 + f2), f3 + f4),
+		if(Number.prototype.toRadians === undefined) {
+			Number.prototype.toRadians = function() {
+				return this * Math.PI / 180;
+			}
+		}
 
-				radians = degrees * (Math.PI / 180);
+		var earth_radius = 6371,
+				source_lat_radians = source_coord.lat.toRadians(),
+				dest_lat_radians = dest_coord.lat.toRadians(),
+				lat_diff_radians = (dest_coord.lat - source_coord.lat).toRadians(),
+				lng_diff_radians = (dest_coord.lng - source_coord.lng).toRadians();
 
-		return earth_radius_km * radians;
+		var formula = Math.sin(lat_diff_radians / 2) * Math.sin(lat_diff_radians / 2) +
+									Math.cos(source_lat_radians) * Math.cos(dest_lat_radians) *
+									Math.sin(lng_diff_radians / 2) * Math.sin(lng_diff_radians / 2),
+				ataned = 	2 * Math.atan2(Math.sqrt(formula), Math.sqrt(1 - formula));
+
+		return earth_radius * ataned;
 	},
 
 	/**
@@ -66,7 +66,7 @@ module.exports = {
 			if(typeof item.latitude === 'undefined' || typeof item.longitude === 'undefined') {
 				return;
 			}
-			return module.exports.calculateDistance(source_location, {lat: item.latitude, lng: item.longitude}) <= within_distance;
+			return module.exports.haversineDistance(source_location, {lat: item.latitude, lng: item.longitude}) <= within_distance;
 		});
 	},
 
@@ -91,7 +91,7 @@ module.exports = {
 
 		module.exports.fetch(url, function(res) {
 			var filtered = module.exports.filterWithinDistance(res, {lat: 53.3381985, lng: -6.2592576}, 30);
-			
+
 			console.log(module.exports.sortAndMap(filtered));		
 		});
 	}

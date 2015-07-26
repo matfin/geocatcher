@@ -27,5 +27,12 @@ $ npm test
 $ node example.js
 ```
 
+## Reference
+
+Here are some links containing information on the formulae used to calculate distances between lat/lng coordinates on a map.
+
+- [http://www.movable-type.co.uk/scripts/latlong.html](http://www.movable-type.co.uk/scripts/latlong.html)
+- [http://www.geodatasource.com/developers/javascript](http://www.geodatasource.com/developers/javascript)
+- [https://en.wikipedia.org/wiki/Great-circle_distance]( https://en.wikipedia.org/wiki/Great-circle_distance)
 
 

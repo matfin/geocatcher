@@ -99,7 +99,7 @@ var filterWithinDistance = function(items, source_location, within_distance) {
  */
 var sortAndMap = function(source) {
 	return source.sort(function(a, b){
-		return a.user_id > b.user_id;		
+		return a.user_id - b.user_id;	
 	}).map(function(item) {
 		return {
 			name: item.name,
